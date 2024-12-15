@@ -13,7 +13,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { processFlightData } from "@/lib/utils";
 
 interface FlightCount {
   Country: string;
@@ -23,7 +22,6 @@ interface FlightCount {
 export default function Home() {
   const [airportCode, setAirportCode] = useState("");
   const debouncedAirportCode = useDebounce(airportCode, 500);
-  const [transformedData, setTransformedData] = useState<FlightCount[]>([]);
 
   const {
     data: flightsData,
@@ -43,15 +41,6 @@ export default function Home() {
     retry: false, // Disable retry on failure
   });
 
-  useEffect(() => {
-    if (flightsData) {
-      const transformedData = processFlightData(flightsData);
-      setTransformedData(transformedData);
-    } else {
-      setTransformedData([]);
-    }
-  }, [flightsData]);
-
   return (
     <div className="mx-auto max-w-3xl p-8">
       <div className="flex flex-col items-center gap-y-4">
@@ -67,7 +56,7 @@ export default function Home() {
         {/* Render loading, error, or data */}
         {isLoading && <Skeleton className="h-10 w-full" />}
         {error && <p>{error.message}</p>}
-        {transformedData?.length > 0 && (
+        {flightsData?.length > 0 && (
           <Table>
             <TableHeader>
               <TableRow>
@@ -76,7 +65,7 @@ export default function Home() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {transformedData.map((item: FlightCount) => {
+              {flightsData.map((item: FlightCount) => {
                 if (item.Country) {
                   return (
                     <TableRow key={item.Country}>
