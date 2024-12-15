@@ -2,6 +2,9 @@ import { processFlightData } from "@/lib/utils";
 import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
+export const maxDuration = 60; // This function can run for a maximum of 5 seconds
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
